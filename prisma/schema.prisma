@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum doesType {
+  first
+  second
+}
+
+enum doseStatus {
+  scheduled
+  cancelled
+  cleared
+}
+
+model User {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String        @unique
+  mobile      String        @unique
+  age         String
+  pincode     String
+  aadhar      String        @unique
+  password    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  userSession UserSession[]
+  vaccination Vaccination?
+
+  @@unique([pincode, aadhar])
+}
+
+model UserSession {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  accessToken     String?
+  refreshToken    String?
+  refreshTokenKey String?
+  user            User     @relation(fields: [userId], references: [id])
+  userId          String   @db.ObjectId
+  isRevoked       Boolean
+  location        String
+  latitude        Float
+  longitude       Float
+  ipAddress       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model TimeOfVaccination {
+  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  date                String
+  timeFrom            String
+  timeTo              String
+  VaccinationStatus   VaccinationStatus @relation(fields: [vaccinationStatusId], references: [id])
+  vaccinationStatusId String            @db.ObjectId
+
+  @@unique([date, timeFrom])
+}
+
+model Vaccination {
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  vaccinationId     String              @unique
+  isActive          Boolean             @default(false)
+  isCleared         Boolean             @default(false)
+  vaccinationStatus VaccinationStatus[]
+  user              User                @relation(fields: [userId], references: [id])
+  userId            String              @unique @db.ObjectId
+}
+
+model VaccinationStatus {
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  status            doseStatus
+  type              doesType
+  timeOfVaccination TimeOfVaccination[]
+  slotTime          DateTime            @unique
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  vaccination       Vaccination?        @relation(fields: [vaccinationId], references: [id])
+  vaccinationId     String?             @db.ObjectId
+
+  @@unique([id, vaccinationId])
+}
+
+model Admin {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String         @unique
+  mobile       String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  AdminSession AdminSession[]
+}
+
+model AdminSession {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  accessToken     String?
+  refreshToken    String?
+  refreshTokenKey String?
+  admin           Admin    @relation(fields: [adminId], references: [id])
+  adminId         String   @db.ObjectId
+  isRevoked       Boolean
+  location        String
+  latitude        Float
+  longitude       Float
+  ipAddress       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
