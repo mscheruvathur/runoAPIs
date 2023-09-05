@@ -10,7 +10,7 @@ export const strictAuth = async ( req: Request, res: Response, next: NextFunctio
         const refreshToken = req.cookies[ '_a_rff-tkn' ] ?? req.headers[ 'refresh' ];
 
         if ( accessToken && refreshToken ) {
-            const sessionInfo = await prisma.userSession.findFirst( {
+            const sessionInfo = await prisma.adminSession.findFirst( {
                 where: {
                     accessToken,
                     refreshToken,
@@ -23,11 +23,11 @@ export const strictAuth = async ( req: Request, res: Response, next: NextFunctio
                 const refreshTokenPayload: IRefreshTokenPayload = await verifyToken( refreshToken );
 
                 if ( accessTokenPayload && refreshTokenPayload ) {
-                    const employeeObjectId = accessTokenPayload[ 'uuid' ] ?? '';
+                    const adminObjectId = accessTokenPayload[ 'uuid' ] ?? '';
 
                     const admin = await prisma.admin.findFirst( {
                         where: {
-                            id: employeeObjectId
+                            id: adminObjectId
                         }
                     } )
 

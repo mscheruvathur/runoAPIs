@@ -1,4 +1,4 @@
-import { cleanEnv, str, json, port, makeValidator, num, url, bool, EnvError } from 'envalid';
+import { cleanEnv, str, port, makeValidator, bool, EnvError } from 'envalid';
 import { config } from 'dotenv';
 
 config();

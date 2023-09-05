@@ -32,7 +32,7 @@ export default class UserController {
                 }
                 return user
             } else {
-                throw APIError.NotFound( 'Failed to find the current employee.' );
+                throw APIError.NotFound( 'Failed to find the current User.' );
             }
         } catch ( err ) {
             throw err;

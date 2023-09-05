@@ -1,6 +1,6 @@
 import path from 'path';
 
-export const CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'https://antmascot.com', 'https://antmascot.in'];
+export const CORS_ALLOWED_ORIGINS = [ 'http://localhost:3000' ];
 export const CORS_ALLOWED_HEADERS = [
     'x-real-ip',
     'x-forwarded-for',
@@ -25,8 +25,8 @@ export const CORS_ALLOWED_HEADERS = [
 ];
 export const CORS_ALLOWED_METHODS = [];
 
-const JWT_PUBLIC_KEY_PATH = path.join(__dirname, '../', '../', 'keys', 'public.pem');
-const JWT_PRIVATE_KEY_PATH = path.join(__dirname, '../', '../', 'keys', 'private.pem');
+const JWT_PUBLIC_KEY_PATH = path.join( __dirname, '../', '../', 'keys', 'public.pem' );
+const JWT_PRIVATE_KEY_PATH = path.join( __dirname, '../', '../', 'keys', 'private.pem' );
 
 const JWT_ALGORITHM = 'RS256';
 
